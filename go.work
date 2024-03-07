@@ -1,4 +1,4 @@
-go 1.22.0
+go 1.22.1
 
 use (
 	./channels
@@ -8,4 +8,5 @@ use (
 	./closure
 	./closure-2
 	./fork-join
+	./select
 )

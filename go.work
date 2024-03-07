@@ -1,8 +1,10 @@
 go 1.22.0
 
 use (
+	./channels
 	./client-server/client
 	./client-server/server
 	./closure
+	./closure-2
 	./fork-join
 )

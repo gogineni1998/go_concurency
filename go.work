@@ -2,6 +2,7 @@ go 1.22.0
 
 use (
 	./channels
+	./channels_exercise
 	./client-server/client
 	./client-server/server
 	./closure

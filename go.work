@@ -9,4 +9,5 @@ use (
 	./closure-2
 	./fork-join
 	./select
+	./sync_go
 )

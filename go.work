@@ -10,4 +10,5 @@ use (
 	./fork-join
 	./select
 	./sync_go
+	./web_crawller
 )

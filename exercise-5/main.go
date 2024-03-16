@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"time"
 
 	"github.com/disintegration/imaging"
@@ -16,6 +17,7 @@ import (
 // Input - directory with images.
 // output - thumbnail images
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	if len(os.Args) < 2 {
 		log.Fatal("need to send directory path of images")
 	}
@@ -33,9 +35,29 @@ func main() {
 // does the file walk
 // generates thumbnail images
 // saves the image to thumbnail directory.
-func walkFiles(root string) error {
-	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+type image_store struct {
+	path      string
+	thumbnail *image.NRGBA
+}
 
+func walkFiles(root string) error {
+	ch1 := make(chan string)
+	ch2 := make(chan *image_store)
+	go func() {
+		for path := range ch1 {
+			thumbnail, err := processImage(path)
+			if err == nil {
+				ch2 <- &image_store{path, thumbnail}
+			}
+		}
+	}()
+
+	go func() {
+		for img := range ch2 {
+			saveThumbnail(img.path, img.thumbnail)
+		}
+	}()
+	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		// filter out error
 		if err != nil {
 			return err
@@ -45,27 +67,14 @@ func walkFiles(root string) error {
 		if !info.Mode().IsRegular() {
 			return nil
 		}
-
-		// check if it is image/jpeg
 		contentType, _ := getFileContentType(path)
-		if contentType != "image/jpeg" {
-			return nil
-		}
-
-		// process the image
-		thumbnailImage, err := processImage(path)
-		if err != nil {
-			return err
-		}
-
-		// save the thumbnail image to disk
-		err = saveThumbnail(path, thumbnailImage)
-		if err != nil {
-			return err
+		if contentType == "image/jpeg" {
+			ch1 <- path
 		}
 		return nil
 	})
-
+	close(ch1)
+	close(ch2)
 	if err != nil {
 		return err
 	}

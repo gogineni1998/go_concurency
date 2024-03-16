@@ -10,6 +10,7 @@ use (
 	./exercise-1
 	./exercise-3
 	./exercise-4
+	./exercise-5
 	./exercise2
 	./fan_out_fan_in
 	./fork-join

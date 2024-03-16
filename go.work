@@ -8,6 +8,7 @@ use (
 	./closure
 	./closure-2
 	./exercise-1
+	./exercise2
 	./fan_out_fan_in
 	./fork-join
 	./pipeline

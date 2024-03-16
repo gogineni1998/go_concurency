@@ -31,7 +31,6 @@ func Crawl(url string, depth int) {
 			Crawl(u, depth-1)
 		}
 	}
-	return
 }
 
 func main() {

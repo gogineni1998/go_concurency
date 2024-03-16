@@ -13,42 +13,25 @@ var fetched map[string]bool
 
 // Crawl uses findLinks to recursively crawl
 // pages starting with url, to a maximum of depth.
-
-type result struct {
-	url   string
-	urls  []string
-	depth int
-	err   error
-}
-
 func Crawl(url string, depth int) {
-
-	ch := make(chan *result)
-	fetch := func(url string, depth int) {
-		urls, err := findLinks(url)
-		ch <- &result{url, urls, depth, err}
-	}
-	go fetch(url, depth)
-	fetched[url] = true
-	for fetching := 1; fetching > 0; fetching-- {
-		res := <-ch
-		if res.err != nil {
-			continue
-		}
-		fmt.Println(res.url)
-		if res.depth > 0 {
-			for _, u := range res.urls {
-				if !fetched[u] {
-					fetching++
-					go fetch(u, res.depth-1)
-					fetched[u] = true
-				}
-			}
-		}
-	}
-	close(ch)
 	// TODO: Fetch URLs in parallel.
 
+	if depth < 0 {
+		return
+	}
+	urls, err := findLinks(url)
+	if err != nil {
+		// fmt.Println(err)
+		return
+	}
+	fmt.Printf("found: %s\n", url)
+	fetched[url] = true
+	for _, u := range urls {
+		if !fetched[u] {
+			Crawl(u, depth-1)
+		}
+	}
+	return
 }
 
 func main() {

@@ -19,4 +19,5 @@ use (
 	./sync_go
 	./web_crawller
 	./with_cancel
+	./with_deadline
 )

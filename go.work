@@ -18,4 +18,5 @@ use (
 	./select
 	./sync_go
 	./web_crawller
+	./with_cancel
 )

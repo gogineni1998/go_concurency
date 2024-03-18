@@ -20,4 +20,5 @@ use (
 	./web_crawller
 	./with_cancel
 	./with_deadline
+	./with_timeout
 )

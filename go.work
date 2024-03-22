@@ -12,6 +12,7 @@ use (
 	./exercise-4
 	./exercise-5
 	./exercise2
+	./exercise_with_context
 	./fan_out_fan_in
 	./fork-join
 	./pipeline
